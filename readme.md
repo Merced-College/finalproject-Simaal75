@@ -1,8 +1,4 @@
 
-Here is the **clean copy-paste version only**, nothing else:
-
----
-
 # 🃏 Blackjack Terminal Game — Final Project Report
 
 ### By: Simaal B — CPSC 39 — Fall 2025
@@ -160,14 +156,14 @@ else: tie
 
 # 5. How the Program Meets Requirements
 
-✔ Uses 3+ data structures
-✔ Includes 3 custom algorithms
-✔ Explains Big-O times
-✔ Includes object-oriented programming
-✔ Contains abstraction and reusable components
-✔ Game works correctly and is entertaining
-✔ Includes original additions (betting, scoreboard, name input)
-✔ Code is well-commented and readable
+- Uses 3+ data structures
+- Includes 3 custom algorithms
+- Explains Big-O times
+- Includes object-oriented programming
+- Contains abstraction and reusable components
+- Game works correctly
+- Includes original additions (betting, scoreboard, name input)
+- Code is well-commented and readable
 
 ---
 
