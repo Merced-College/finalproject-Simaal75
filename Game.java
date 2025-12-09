@@ -5,31 +5,44 @@
 import java.util.HashMap;
 import java.util.Scanner;
 
+// This class runs the entire blackjack game.
+// It uses multiple data structures, several algorithms, and handles user interaction.
 public class Game {
 
+    // LinkedList deck (Data Structure #1)
     static LinkList deck = new LinkList();
+
+    // Players store cards in an array (Data Structure #2)
     static Player player = new Player();
     static Player dealer = new Player();
+
+    // HashMap to track wins and losses (Data Structure #3)
     static HashMap<String, Integer> stats = new HashMap<>();
 
     public static void main(String[] args) {
 
+        // initialize win/loss stats
         stats.put("wins", 0);
         stats.put("losses", 0);
 
+        // load card deck from text file
         loadDeck();
 
         Scanner in = new Scanner(System.in);
 
+        // Feature #1: Ask for the player's name
         System.out.print("Enter your name: ");
         String name = in.nextLine().trim();
 
+        // Feature #2: betting system — player starts with $100
         int balance = 100;
+
         String play = "y";
 
+        // Main game loop — continues until user enters "n"
         while (play.equalsIgnoreCase("y")) {
 
-            deck.shuffle();
+            deck.shuffle();    // shuffle before each round
             player.reset();
             dealer.reset();
 
@@ -39,6 +52,7 @@ public class Game {
             int bet = Integer.parseInt(in.nextLine());
             System.out.println("-------------------------------------\n");
 
+            // deal two cards each
             player.addCard(deck.getFirst());
             player.addCard(deck.getFirst());
 
@@ -52,6 +66,9 @@ public class Game {
             System.out.println("\nDealer shows:");
             System.out.println(dealer.hand[0]);
 
+            // ---------------------------------------------
+            // PLAYER TURN: choose hit or stand
+            // ---------------------------------------------
             boolean stop = false;
             while (!stop && getHandValue(player.hand, player.count) < 21) {
                 System.out.print("\nHit or stand? ");
@@ -66,23 +83,28 @@ public class Game {
                 }
             }
 
+            // Dealer hits until at least 16
             while (getHandValue(dealer.hand, dealer.count) < 16) {
                 dealer.addCard(deck.getFirst());
             }
 
             System.out.println("\nDealer hand:");
             showDealerCards();
+
             int p = getHandValue(player.hand, player.count);
             int d = getHandValue(dealer.hand, dealer.count);
 
             System.out.println("\nYour total: " + p);
             System.out.println("Dealer total: " + d + "\n");
 
+            // ---------------------------------------------
+            // WINNER ALGORITHM (Algorithm #3)
+            // ---------------------------------------------
             if (p > 21) {
                 System.out.println(name + " busts! Dealer wins.");
                 balance -= bet;
                 stats.put("losses", stats.get("losses") + 1);
-            } 
+            }
             else if (d > 21) {
                 System.out.println("Dealer busts! " + name + " wins!");
                 balance += bet;
@@ -104,23 +126,26 @@ public class Game {
 
             System.out.print("\nPlay again? (y/n): ");
             play = in.nextLine().trim().toLowerCase();
-
-            if (!play.equals("y")) break;
         }
 
+        // ---------------------------------------------
+        // Feature #3: Final scoreboard after player stops
+        // ---------------------------------------------
         System.out.println("\n-------------------------------------");
         System.out.println("FINAL SCOREBOARD");
         System.out.println("-------------------------------------");
-        System.out.println("Player: " + name);
+
         int wins = stats.get("wins");
         int losses = stats.get("losses");
-        int total = wins + losses;
-        System.out.println("Total Rounds: " + total);
+        int rounds = wins + losses;
+
+        System.out.println("Player: " + name);
+        System.out.println("Total Rounds: " + rounds);
         System.out.println("Wins: " + wins);
         System.out.println("Losses: " + losses);
 
-        if (total > 0) {
-            double rate = (wins * 100.0) / total;
+        if (rounds > 0) {
+            double rate = (wins * 100.0) / rounds;
             System.out.println("Win Rate: " + String.format("%.1f", rate) + "%");
         }
 
@@ -128,6 +153,8 @@ public class Game {
         System.out.println("\nThanks for playing, " + name + "!");
     }
 
+
+    // Loads cards from the text file into the LinkedList deck
     public static void loadDeck() {
         try (java.io.BufferedReader br = new java.io.BufferedReader(new java.io.FileReader("cards.txt"))) {
             String line;
@@ -141,6 +168,15 @@ public class Game {
         }
     }
 
+
+    // --------------------------------------------------------------
+    // ACE HANDLING + TOTALING ALGORITHM (Algorithm #2)
+    //
+    // Counts Aces as 11, but converts them to 1 if the total busts.
+    // Much more accurate blackjack logic.
+    //
+    // Big O: O(n)
+    // --------------------------------------------------------------
     public static int getHandValue(Card[] hand, int size) {
         int total = 0;
         int aces = 0;
@@ -159,12 +195,15 @@ public class Game {
         return total;
     }
 
+
+    // Prints all cards in player's hand
     public static void showPlayerCards() {
         for (int i = 0; i < player.count; i++) {
             System.out.println("- " + player.hand[i]);
         }
     }
 
+    // Prints all dealer cards
     public static void showDealerCards() {
         for (int i = 0; i < dealer.count; i++) {
             System.out.println("- " + dealer.hand[i]);
