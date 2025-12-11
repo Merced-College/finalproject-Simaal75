@@ -185,12 +185,10 @@ Any other input would quit.
 
 # 7. Future Improvements
 
-* Splitting pairs
-* Double down
-* Better dealer AI
-* JavaFX GUI
+* Perfect BlackJack Logic
+* Conversion to a Casino w multiple game options
 * Save game stats
-* Improved terminal graphics/colors
+* Better terminal graphics/colors
 
 ---
 
